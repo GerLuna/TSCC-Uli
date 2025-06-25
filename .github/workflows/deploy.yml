@@ -1,0 +1,31 @@
+name: Deploy FastAPI to jquiroz.net
+
+on:
+  push:
+    branches:
+      - master  # Cambia a master si tu rama principal se llama así
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_KEY }}
+
+    - name: Deploy and Run FastAPI
+      run: |
+        ssh -o StrictHostKeyChecking=no ulises@jquiroz.net << 'EOF'
+          cd /home/ulises/gitRemoto
+          git pull origin main
+          source /home/ulises/ambiente/.vem/bin/activate
+          pip install -r requeriments.txt || pip install fastapi uvicorn
+          fuser -k 3015/tcp || true
+          nohup uvicorn main:app --host 0.0.0.0 --port 3015 &
+        EOF
