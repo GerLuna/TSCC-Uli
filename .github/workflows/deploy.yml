@@ -1,31 +1,14 @@
-name: Deploy FastAPI to jquiroz.net
+- name: Deploy and Run FastAPI
+  run: |
+    ssh -o StrictHostKeyChecking=no ulises@jquiroz.net << 'EOF'
+      cd /home/ulises/gitRemoto
+      git pull origin master
+      source /home/ulises/ambiente/.vem/bin/activate
+      pip install -r requeriments.txt || pip install fastapi uvicorn
 
-on:
-  push:
-    branches:
-      - master  # Cambia a master si tu rama principal se llama así
+      # Detener cualquier proceso previo en el puerto 3015
+      fuser -k 3015/tcp || true
 
-jobs:
-  deploy:
-    name: Deploy to Server
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up SSH key
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
-
-    - name: Deploy and Run FastAPI
-      run: |
-        ssh -o StrictHostKeyChecking=no ulises@jquiroz.net << 'EOF'
-          cd /home/ulises/gitRemoto
-          git pull origin main
-          source /home/ulises/ambiente/.vem/bin/activate
-          pip install -r requeriments.txt || pip install fastapi uvicorn
-          fuser -k 3015/tcp || true
-          nohup uvicorn main:app --host 0.0.0.0 --port 3015 &
-        EOF
+      # Iniciar el servidor FastAPI en segundo plano con nohup
+      nohup /home/ulises/ambiente/.vem/bin/uvicorn main:app --host 0.0.0.0 --port 3015 > fastapi.log 2>&1 &
+    EOF
