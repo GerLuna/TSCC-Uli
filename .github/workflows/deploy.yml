@@ -31,5 +31,5 @@ jobs:
           fuser -k 3015/tcp || true
 
           # Iniciar el servidor FastAPI en segundo plano con nohup
-          nohup /home/ulises/ambiente/.vem/bin/uvicorn main:app --host 0.0.0.0 --port 3015 > fastapi.log 2>&1 &
+          nohup /home/ulises/ambiente/.vemv/bin/uvicorn main:app --host 0.0.0.0 --port 3015 > fastapi.log 2>&1 &
         EOF
