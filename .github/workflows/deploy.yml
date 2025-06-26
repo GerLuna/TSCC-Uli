@@ -22,7 +22,7 @@ jobs:
     - name: Deploy and Run FastAPI
       run: |
         ssh -o StrictHostKeyChecking=no ulises@jquiroz.net << 'EOF'
-          cd /home/ulises/gitRemoto
+          cd /home/ulises/gitRemoto/TSCC
           git pull origin master
           source /home/ulises/ambiente/.vem/bin/activate
           pip install -r requeriments.txt || pip install fastapi uvicorn
