@@ -15,7 +15,7 @@ app.add_middleware(
 
 @app.get("/")
 def inicio():
-    return {"mensaje": "Bienvenido a la Calculadora API\nUlises estuvo aqui\nGerardo estuvo aqui lml\nGerardo ya no esta aqui :("}
+    return {"mensaje": "Bienvenido a la Calculadora API\nUlises estuvo aqui\nGerardo estuvo aqui lml\nGerardo ya no esta aqui :(, Vuelvo a estar"}
 
 # Incluir rutas desde el router
 app.include_router(calculadora_router.router, prefix="/calculadora", tags=["Operaciones"])
